@@ -1,38 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+
 .App {
+  width: 100%;
+  margin: 0;
+}
+
+.dog-page-wrapper {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.dog-img-wrapper {
+  display: inline-block;
+  text-align: center;
+  width: 300px;
+  height: auto;
+  margin: 1%;
+  top: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.dog-img {
+  display: block;
+  width: 100%; 
+  height: auto;
+  height: 350px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.drop-down-breeds-wrapper {
+  text-align: center;
+  font-weight: 700;
+  font-size: large;
+  display: block;
+  position: fixed;
+  width: 100%;
+  top: 0;
 }
