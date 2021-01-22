@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import debounce from 'lodash.debounce';
 import DogCard from '../components/DogCard.js';
 
 function DogPage(){
-    const randomDogImgAPI = "https://dog.ceo/api/breeds/image/random/10";
+    const randomDogImgAPI = `https://dog.ceo/api/breeds/image/random/`;
     const dogBreedsAPI = "https://dog.ceo/api/breeds/list/all";
     const [ dogImgs, setDogImgs ] = useState([]); // Rendered All Dog Imgs
     const [ selectedBreeds, setSelectedBreeds ] = useState(); // Selected Breed from Dropdown by user
@@ -17,19 +18,34 @@ function DogPage(){
         renderDogBreeds();
     },[]);
 
+    // Take care number of dog images to be fetched based on current width size
+    function handleRenderNum(){
+        const width = window.innerWidth;
+        if(width >= 2500){
+            return 50;
+        } else if(width >= 1400 && width < 2500){
+            return 30;
+        } else if(width >= 500 && width < 1400){
+            return 20;
+        } else {
+            return 10;
+        }
+    }
+
     async function renderRandomDogImgs(){
         if(!isLoading){
             setIsLoading(true);
-            await fetch(randomDogImgAPI)
+            let count = handleRenderNum();
+            await fetch(randomDogImgAPI + count)
             .then(resp => resp.json())
             .then(data => {
                 // Filter out duplicate dog images
                 const filteredDogs = handleDuplicates(data.message);
                 // Then concatinate into previous array
                 setDogImgs((prev) => [...prev, ...filteredDogs]);
-                setIsLoading(false);
             })
             .catch(err => console.log(err));
+            setIsLoading(false);
         }
     }
 
@@ -37,7 +53,7 @@ function DogPage(){
         await fetch(dogBreedsAPI)
         .then(resp => resp.json())
         .then(data => {
-            setBreedOptions(oldArr => oldArr.concat(Object.keys(data.message)));
+            setBreedOptions((prev) => [...prev, ...Object.keys(data.message)]);
         })
         .catch(err => console.log(err));
     }
@@ -63,22 +79,25 @@ function DogPage(){
     }
 
     function handleDuplicates(dogs){
-        const map = {};
+        const map = new Map();
         const result = [];
         dogImgs.forEach(dog => {
-            map[dog] = true;
-        })
+            if(!map.has(dog)){
+                map.set(dog, 1);
+            } else {
+                map.set(dog, map.get(dog)+1);
+            }
+        });
         dogs.forEach(dog => {
-            if(!map[dog]){
+            if(!map.has(dog)){
                 result.push(dog);
             }
-        })
+        });
         return result;
     }
 
-    const handleAdditionalRender = useCallback(() => {
-        renderRandomDogImgs();
-    })
+    const handleAdditionalRender = useCallback(
+		debounce(() => renderRandomDogImgs(), 1000));
 
     // It triggers "handleAdditionalRender when scroll reach the bottom of body"
     useBottomScrollListener(handleAdditionalRender);
@@ -97,6 +116,12 @@ function DogPage(){
             <div>
                 {renderDogCards()}
             </div>
+            {
+            isLoading ?
+            <div className="lds"><div></div><div></div><div></div></div>
+            :
+            false
+            }
         </div>
     )
 }
