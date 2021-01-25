@@ -1,5 +1,5 @@
 import './App.css';
-import DogPage from './pages/DogPage.js';
+import DogPage from './pages/dog-page/dog-page.js';
 
 function App() {
   return (
@@ -8,5 +8,4 @@ function App() {
     </div>
   );
 }
-
 export default App;

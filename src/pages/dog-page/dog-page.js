@@ -1,21 +1,22 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 import Dropdown from 'react-dropdown';
-import 'react-dropdown/style.css';
 import debounce from 'lodash.debounce';
-import DogCard from '../components/DogCard.js';
+import DogCard from '../../components/dog-card/dog-card.js';
+import Loading from '../../components/loading/loading.js';
+import API from '../../service/api.js';
+import './dog-page.css';
+import 'react-dropdown/style.css';
 
 function DogPage(){
-    const randomDogImgAPI = `https://dog.ceo/api/breeds/image/random/`;
-    const dogBreedsAPI = "https://dog.ceo/api/breeds/list/all";
     const [ dogImgs, setDogImgs ] = useState([]); // Rendered All Dog Imgs
     const [ selectedBreeds, setSelectedBreeds ] = useState(); // Selected Breed from Dropdown by user
     const [ breedOptions, setBreedOptions ] = useState(["-----"]); // All Breed Options for Dropdown
     const [ isLoading, setIsLoading ] = useState(false);
 
     useEffect(() => {
-        renderRandomDogImgs();
-        renderDogBreeds();
+        fetchRandomDogImgs();
+        fetchDogBreeds();
     },[]);
 
     // Take care number of dog images to be fetched based on current width size
@@ -32,39 +33,36 @@ function DogPage(){
         }
     }
 
-    async function renderRandomDogImgs(){
-        if(!isLoading){
+    async function fetchRandomDogImgs(){
+        if(isLoading){ return };
+        try {
             setIsLoading(true);
             let count = handleRenderNum();
-            await fetch(randomDogImgAPI + count)
-            .then(resp => resp.json())
-            .then(data => {
-                // Filter out duplicate dog images
-                const filteredDogs = handleDuplicates(data.message);
-                // Then concatinate into previous array
-                setDogImgs((prev) => [...prev, ...filteredDogs]);
-            })
-            .catch(err => console.log(err));
+            const data = await API.fetchRandomDogImgs(count);
+            // Filter out duplicate dog images
+            const filteredDogs = handleDuplicates(data.message);
+            // Then concatinate into previous array
+            setDogImgs((prev) => [...prev, ...filteredDogs]);
             setIsLoading(false);
-        }
+        } catch(error){}
     }
 
-    async function renderDogBreeds(){
-        await fetch(dogBreedsAPI)
-        .then(resp => resp.json())
-        .then(data => {
+    // It need to be cached in order to improve performance
+    async function fetchDogBreeds(){
+        try{
+            const data = await API.fetchDogBreeds();
             setBreedOptions((prev) => [...prev, ...Object.keys(data.message)]);
-        })
-        .catch(err => console.log(err));
+        } catch(error) {}
     }
     
+    // Filter Dog Images based on the breed selected, If "-----" has been selected or not selected, render all dog images
     function renderDogCards(){
         if(selectedBreeds && selectedBreeds !== "-----"){
             const filteredDogImgs = dogImgs.filter(dogImg => {
                 let breed = dogImg.split("/")[4];
                 let checkBreed = breed.split("-")[0];
                 if(checkBreed) breed = checkBreed;
-                return selectedBreeds === breed
+                return selectedBreeds === breed;
             })
             return filteredDogImgs.map(dog => {
                 return <DogCard dog={dog} key={dog+Math.random()} />
@@ -96,8 +94,9 @@ function DogPage(){
         return result;
     }
 
+    // Used debounce to prevent multiple fetch by giving term of 1000 ms
     const handleAdditionalRender = useCallback(
-		debounce(() => renderRandomDogImgs(), 1000));
+		debounce(() => fetchRandomDogImgs(), 1000));
 
     // It triggers "handleAdditionalRender when scroll reach the bottom of body"
     useBottomScrollListener(handleAdditionalRender);
@@ -116,12 +115,7 @@ function DogPage(){
             <div>
                 {renderDogCards()}
             </div>
-            {
-            isLoading ?
-            <div className="lds"><div></div><div></div><div></div></div>
-            :
-            false
-            }
+            {isLoading ? <Loading /> : false}
         </div>
     )
 }

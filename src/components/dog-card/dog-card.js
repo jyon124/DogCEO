@@ -1,7 +1,6 @@
-import React from 'react';
+import './dog-card.css';
 
 function DogCard(props){
-
     return (
         <div className="dog-img-wrapper">
             <img 
@@ -12,5 +11,5 @@ function DogCard(props){
             />
         </div>
     )
-}
+}   
 export default DogCard;

@@ -1,0 +1,19 @@
+.dog-page-wrapper {
+    text-align: center;
+}
+
+.drop-down-breeds-wrapper {
+    text-align: center;
+    font-weight: 700;
+    font-size: large;
+    display: block;
+    position: fixed;
+    width: 100%;
+    top: 0;
+}
+
+@media only screen and (min-width: 2400px){
+    .dog-img-wrapper {
+      width: 18%;
+    }
+}
