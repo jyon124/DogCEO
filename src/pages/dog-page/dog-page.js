@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useBottomScrollListener } from 'react-bottom-scroll-listener';
-import Dropdown from 'react-dropdown';
-import debounce from 'lodash.debounce';
-import DogCard from '../../components/dog-card/dog-card.js';
-import Loading from '../../components/loading/loading.js';
-import API from '../../service/api.js';
-import './dog-page.css';
-import 'react-dropdown/style.css';
+import React, { useCallback, useEffect, useState, } from "react";
+import { useBottomScrollListener, } from "react-bottom-scroll-listener";
+import Dropdown from "react-dropdown";
+import debounce from "lodash.debounce";
+import DogCard from "../../components/dog-card/dog-card.js";
+import Loading from "../../components/loading/loading.js";
+import API from "../../service/api.js";
+import "./dog-page.css";
+import "react-dropdown/style.css";
 
 function DogPage(){
     const [ dogImgs, setDogImgs ] = useState([]); // Rendered All Dog Imgs
@@ -35,7 +35,7 @@ function DogPage(){
     }
 
     async function fetchRandomDogImgs(){
-        if(isLoading){ return }
+        if(isLoading){ return; }
         try {
             setIsLoading(true);
             let count = handleRenderNum();
@@ -45,7 +45,7 @@ function DogPage(){
             // Then concatinate into previous array
             setDogImgs((prev) => [...prev, ...filteredDogs]);
             setIsLoading(false);
-        } catch(error){ return }
+        } catch(error){ return; }
     }
 
     // It need to be cached in order to improve performance
@@ -53,7 +53,7 @@ function DogPage(){
         try{
             const data = await API.fetchDogBreeds();
             setBreedOptions((prev) => [...prev, ...Object.keys(data.message)]);
-        } catch(error) { return }
+        } catch(error) { return; }
     }
     
     // Filter Dog Images based on the breed selected, If "-----" has been selected or not selected, render all dog images
@@ -62,17 +62,19 @@ function DogPage(){
             const filteredDogImgs = dogImgs.filter(dogImg => {
                 let breed = dogImg.split("/")[4];
                 let checkBreed = breed.split("-")[0];
-                if(checkBreed) breed = checkBreed;
+                if(checkBreed) {
+                    breed = checkBreed;
+                }
                 return selectedBreeds === breed;
-            })
+            });
             return filteredDogImgs.map(dog => {
-                return <DogCard dog={dog} key={dog+Math.random()} />
-            })
+                return <DogCard dog={dog} key={dog+Math.random()} />;
+            });
         } else {
             if(dogImgs.length){
                 return dogImgs.map(dog => {
-                    return <DogCard dog={dog} key={dog+Math.random()} />
-                })
+                    return <DogCard dog={dog} key={dog+Math.random()} />;
+                });
             }
         }
     }
@@ -96,8 +98,7 @@ function DogPage(){
     }
 
     // Used debounce to prevent multiple fetch by giving term of 1000 ms
-    const handleAdditionalRender = useCallback(
-		debounce(() => fetchRandomDogImgs(), 1000));
+    const handleAdditionalRender = useCallback(debounce(() => fetchRandomDogImgs(), 1000));
 
     // It triggers "handleAdditionalRender when scroll reach the bottom of body"
     useBottomScrollListener(handleAdditionalRender);
@@ -118,6 +119,6 @@ function DogPage(){
             </div>
             {isLoading ? <Loading /> : false}
         </div>
-    )
+    );
 }
 export default DogPage;

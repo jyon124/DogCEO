@@ -1,5 +1,5 @@
-import React from 'react';
-import './loading.css';
+import React from "react";
+import "./loading.css";
 
 function Loading(){
     return (
@@ -8,6 +8,6 @@ function Loading(){
             <div></div>
             <div></div>
         </div>
-    )
+    );
 }
 export default Loading;

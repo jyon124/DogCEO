@@ -14,19 +14,13 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "plugins": ["a-plugin"],
-    "overrides": [
-        {
-            "files": ["*.md"],
-            "processor": "a-plugin/markdown"
-        },
-        {
-            "files": ["**/*.md/*.js"],
-            "rules": {"strict": "off"}
-        }
-    ],    
-    "parser": "esprima",
+    "plugins": ["react"],
     "rules": {
-        "semi": "error"
+        "semi": "error",
+        "curly": "error",
+        "quotes": ["error", "double"],
+        "indent": ["error", 4],
+        "linebreak-style": ["error", "unix"],
+        "no-cond-assign": ["error", "always"]
     }
 }

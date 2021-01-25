@@ -1,4 +1,4 @@
-const randomDogImgAPI = `https://dog.ceo/api/breeds/image/random/`;
+const randomDogImgAPI = "https://dog.ceo/api/breeds/image/random/";
 const dogBreedsAPI = "https://dog.ceo/api/breeds/list/all";
 
 const fetchReq = {
@@ -12,5 +12,5 @@ const fetchReq = {
         const data = await response.json();
         return data;
     }
-}
+};
 export default fetchReq;
