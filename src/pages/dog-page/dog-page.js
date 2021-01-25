@@ -15,6 +15,7 @@ function DogPage(){
     const [ isLoading, setIsLoading ] = useState(false);
 
     useEffect(() => {
+        // It isn't good practice to put the fetch functions in useEffect
         fetchRandomDogImgs();
         fetchDogBreeds();
     },[]);
@@ -34,7 +35,7 @@ function DogPage(){
     }
 
     async function fetchRandomDogImgs(){
-        if(isLoading){ return };
+        if(isLoading){ return }
         try {
             setIsLoading(true);
             let count = handleRenderNum();
@@ -44,7 +45,7 @@ function DogPage(){
             // Then concatinate into previous array
             setDogImgs((prev) => [...prev, ...filteredDogs]);
             setIsLoading(false);
-        } catch(error){}
+        } catch(error){ return }
     }
 
     // It need to be cached in order to improve performance
@@ -52,7 +53,7 @@ function DogPage(){
         try{
             const data = await API.fetchDogBreeds();
             setBreedOptions((prev) => [...prev, ...Object.keys(data.message)]);
-        } catch(error) {}
+        } catch(error) { return }
     }
     
     // Filter Dog Images based on the breed selected, If "-----" has been selected or not selected, render all dog images

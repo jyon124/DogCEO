@@ -1,3 +1,5 @@
+import React from 'react';
+import PropTypes from 'prop-types';
 import './dog-card.css';
 
 function DogCard(props){
@@ -11,5 +13,8 @@ function DogCard(props){
             />
         </div>
     )
-}   
+}
+DogCard.propTypes = {
+    dog: PropTypes.string.isRequired,
+};
 export default DogCard;
