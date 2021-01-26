@@ -48,7 +48,7 @@ function DogPage(){
         } catch(error){ return; }
     }
 
-    // It need to be cached in order to improve performance
+    // It need to be cached in order to improve performance => Apollo, GraphQL
     async function fetchDogBreeds(){
         try{
             const data = await API.fetchDogBreeds();
@@ -56,7 +56,7 @@ function DogPage(){
         } catch(error) { return; }
     }
     
-    // Filter Dog Images based on the breed selected, If "-----" has been selected or not selected, render all dog images
+    // Filter Dog Images based on the selected breed, If "-----" has been selected or anything selected, render all dog images
     function renderDogCards(){
         if(selectedBreeds && selectedBreeds !== "-----"){
             const filteredDogImgs = dogImgs.filter(dogImg => {
@@ -79,6 +79,7 @@ function DogPage(){
         }
     }
 
+    // Filter out duplicate dog images from newly fetched random dog images
     function handleDuplicates(dogs){
         const map = new Map();
         const result = [];
@@ -104,21 +105,23 @@ function DogPage(){
     useBottomScrollListener(handleAdditionalRender);
 
     return (
-        <div className="dog-page-wrapper">
-            <div className="drop-down-breeds-wrapper">
-                <Dropdown 
-                    className="drop-down-breeds" 
-                    options={breedOptions} 
-                    onChange={(e) => setSelectedBreeds(e.value)} 
-                    value={"Select a breed"} 
-                    placeholder="Select a breed" 
-                />
+        <React.Fragment>
+            <div className="dog-page-wrapper">
+                <div className="drop-down-breeds-wrapper">
+                    <Dropdown 
+                        className="drop-down-breeds" 
+                        options={breedOptions} 
+                        onChange={(e) => setSelectedBreeds(e.value)} 
+                        value={"Select a breed"} 
+                        placeholder="Select a breed" 
+                    />
+                </div>
+                <div>
+                    {renderDogCards()}
+                </div>
+                {isLoading ? <Loading /> : false}
             </div>
-            <div>
-                {renderDogCards()}
-            </div>
-            {isLoading ? <Loading /> : false}
-        </div>
+        </React.Fragment>
     );
 }
 export default DogPage;

@@ -3,11 +3,13 @@ import "./loading.css";
 
 function Loading(){
     return (
-        <div className="lds">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
+        <React.Fragment>
+            <div className="lds">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </React.Fragment>
     );
 }
 export default Loading;

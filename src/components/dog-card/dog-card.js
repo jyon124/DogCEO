@@ -3,15 +3,20 @@ import PropTypes from "prop-types";
 import "./dog-card.css";
 
 function DogCard(props){
+    const {
+        dog,
+    } = props;
     return (
-        <div className="dog-img-wrapper">
-            <img 
-                className="dog-img"
-                src={props.dog} 
-                key={props.dog+Math.random()}
-                alt="dog img" 
-            />
-        </div>
+        <React.Fragment>
+            <div className="dog-img-wrapper">
+                <img 
+                    className="dog-img"
+                    src={dog} 
+                    key={dog+Math.random()}
+                    alt="dog img" 
+                />
+            </div>
+        </React.Fragment>
     );
 }
 DogCard.propTypes = {
