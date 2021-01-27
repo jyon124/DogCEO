@@ -1,11 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Loading from './loading.js';
-
-import Enzyme, { shallow, render, mount } from 'enzyme';
+import { shallow, render, mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 
 describe('Loading', () => {
+    /** Snapshot test to test @Loading component renders correctly **/
     it('renders a Loading component', () => {
         const wrapper = shallow(<Loading />)
         expect(toJson(wrapper)).toMatchSnapshot();

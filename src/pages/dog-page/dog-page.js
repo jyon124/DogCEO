@@ -9,12 +9,12 @@ import "./dog-page.css";
 import "react-dropdown/style.css";
 
 function DogPage(){
-    const [ dogImgs, setDogImgs ] = useState([]); // Rendered All Dog Imgs
+    const [ dogImgs, setDogImgs ] = React.useState([]); // Rendered All Dog Imgs
     const [ selectedBreeds, setSelectedBreeds ] = useState(); // Selected Breed from Dropdown by user
     const [ breedOptions, setBreedOptions ] = useState(["-----"]); // All Breed Options for Dropdown
-    const [ isLoading, setIsLoading ] = useState(false);
+    const [ isLoading, setIsLoading ] = React.useState(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         // It isn't good practice to put the fetch functions in useEffect
         fetchRandomDogImgs();
         fetchDogBreeds();

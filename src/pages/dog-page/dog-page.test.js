@@ -1,18 +1,40 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import DogPage from './dog-page.js';
 import Loading from '../../components/loading/loading.js';
-import Enzyme, { shallow, render, mount } from 'enzyme';
+import { shallow, render, mount } from 'enzyme';
 
 describe('DogPage', () => {
-    // Seems modifying React Hooks is not supported in Enzyme
-    // => https://blog.logrocket.com/a-quick-guide-to-testing-react-hooks-fa584c415407/
+    beforeEach(() => {
+        const mocksetDogImgs = jest.fn();
+        React.useState = jest.fn(() => [[], mocksetDogImgs]);
+    });
+
     it('renders loading component for the initial render', () => {
-        const wrapper = shallow(<DogPage />);
+        /**
+         *  It will render loading component initially because @useEffect will be invoked
+         *  initially that have fetch functions and it triggers loading while fetching
+         **/
+        const wrapper = mount(<DogPage />);
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
     });
-    // it('renders loading component if no dog images are fetched');
-    // it('renders loading component if the fetch call is being made');
+
+    it('renders loading component if no dog images are fetched', () => {
+        /**
+         * @param {dogImgs} set to empty at beforeEach, fetch function will invoked when
+         * there are no dog imgs and it renders loading component during fetch.
+         **/
+        const wrapper = mount(<DogPage />);
+        expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
+    });
+
+    it('renders loading component if the fetch call is being made', () => {
+        /**
+         *  Fetch functions are located in @useEffect thus, by using mount,
+         *  it invoke fetch functions and renders loading component.
+         **/
+        const wrapper = mount(<DogPage />);
+        expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
+    });
     // it('renders DogCard components when dog images data are available');
     // it('renders only unique dog image - filters the duplicates');
     // it('fetches additional dog images when the scroll reaches to the bottom and renders them');
