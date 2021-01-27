@@ -3,8 +3,6 @@ import ReactDOM from 'react-dom';
 import DogPage from './dog-page.js';
 import Loading from '../../components/loading/loading.js';
 import Enzyme, { shallow, render, mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-Enzyme.configure({ adapter: new Adapter() })
 
 describe('DogPage', () => {
     // Seems modifying React Hooks is not supported in Enzyme
