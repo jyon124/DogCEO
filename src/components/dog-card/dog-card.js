@@ -12,7 +12,6 @@ function DogCard(props){
                 <img 
                     className="dog-img"
                     src={dog} 
-                    key={dog+Math.random()}
                     alt="dog img" 
                 />
             </div>
