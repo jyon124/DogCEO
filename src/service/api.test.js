@@ -2,7 +2,7 @@ import api from "./api.js";
 
 describe('DogApi.fetchRandomDogImgs', () => {
     const mockFetchJson = jest.fn();
-    fetch = jest.fn();
+    jest.spyOn(global, 'fetch');
     afterEach(() => {
         fetch.mockClear();
         mockFetchJson.mockClear();
@@ -27,7 +27,7 @@ describe('DogApi.fetchRandomDogImgs', () => {
 
 describe('DogApi.fetchDogBreeds', () => {
     const mockFetchJson = jest.fn();
-    fetch = jest.fn();
+    jest.spyOn(global, 'fetch');
     afterEach(() => {
         fetch.mockClear();
         mockFetchJson.mockClear();
