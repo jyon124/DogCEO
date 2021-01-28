@@ -2,38 +2,41 @@ import React from 'react';
 import DogPage from './dog-page.js';
 import Loading from '../../components/loading/loading.js';
 import { shallow, render, mount } from 'enzyme';
+import DogCard from '../../components/dog-card/dog-card.js';
+import { waitFor } from '@testing-library/react';
 
 describe('DogPage', () => {
-    beforeEach(() => {
-        const mocksetDogImgs = jest.fn();
-        React.useState = jest.fn(() => [[], mocksetDogImgs]);
-    });
-
     it('renders loading component for the initial render', () => {
-        /**
-         *  It will render loading component initially because @useEffect will be invoked
-         *  initially that have fetch functions and it triggers loading while fetching
-         **/
+        // On mount, DogPage invoke fetch requests in useEffect that spin up loading
+        const mocksetDogImgs = jest.fn();
         const wrapper = mount(<DogPage />);
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
     });
 
     it('renders loading component if no dog images are fetched', () => {
-        /**
-         * @param {dogImgs} set to empty at beforeEach, fetch function will invoked when
-         * there are no dog imgs and it renders loading component during fetch.
-         **/
-        const wrapper = mount(<DogPage />);
+        const mockDog = "dog.jpeg";
+        const mocksetDogImgs = jest.fn();
+        React.useState = jest.fn(() => [[], mocksetDogImgs]); 
+        const wrapper = shallow(<DogPage />);
+        // Check if DogCard component has rendered, it only renders when dog images are fetched
+        expect(wrapper.containsMatchingElement(<DogCard dog={mockDog} />)).toEqual(false);
+        // If dog images aren't fetched, Loading component have to be visible
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
     });
 
-    it('renders loading component if the fetch call is being made', async () => {
-        /**
-         *  Fetch functions are located in @useEffect thus, by using mount,
-         *  it invoke fetch functions and renders loading component.
-         **/
-        const wrapper = mount(<DogPage />);
+    it('renders loading component if the fetch call is being made', (done) => {
+        expect.assertions(2);
+        const mockDog = "dog.jpeg";
+        const mockDogImgs = ["dog1.jpeg", "dog2.jpeg", "dog3.jpeg"];
+        const mocksetDogImgs = jest.fn();
+        // If dogImgs length is positive number, it should render DogCard component
+        React.useState = jest.fn(() => [mockDogImgs, mocksetDogImgs]); 
+        const wrapper = shallow(<DogPage />);
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
+        wrapper.update();
+        // Check if there is any DogCard component
+        expect(wrapper.containsMatchingElement(<DogCard dog={mockDog} />)).toEqual(true);
+        done();
     });
     // it('renders DogCard components when dog images data are available');
     // it('renders only unique dog image - filters the duplicates');

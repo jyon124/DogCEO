@@ -116,7 +116,7 @@ function DogPage(){
                         placeholder="Select a breed" 
                     />
                 </div>
-                <div>
+                <div id="dog-cards-container">
                     {renderDogCards()}
                 </div>
                 {isLoading ? <Loading /> : false}
