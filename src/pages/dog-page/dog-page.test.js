@@ -27,7 +27,7 @@ describe('DogPage', () => {
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
     });
 
-    it('renders loading component if the fetch call is being made', () => {
+    it('renders loading component if the fetch call is being made', async () => {
         /**
          *  Fetch functions are located in @useEffect thus, by using mount,
          *  it invoke fetch functions and renders loading component.
