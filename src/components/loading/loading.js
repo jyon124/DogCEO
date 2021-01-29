@@ -1,7 +1,7 @@
 import React from "react";
 import "./loading.css";
 
-function Loading(){
+function Loading() {
     return (
         <React.Fragment>
             <div className="lds">
