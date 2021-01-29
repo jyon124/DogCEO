@@ -1,7 +1,7 @@
 import React from 'react';
 import DogPage from './dog-page.js';
 import Loading from '../../components/loading/loading.js';
-import { shallow, render, mount } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import DogCard from '../../components/dog-card/dog-card.js';
 // import { waitFor } from '@testing-library/react';
 
