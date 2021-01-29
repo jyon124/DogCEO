@@ -3,7 +3,7 @@ import DogPage from './dog-page.js';
 import Loading from '../../components/loading/loading.js';
 import { shallow, render, mount } from 'enzyme';
 import DogCard from '../../components/dog-card/dog-card.js';
-import { waitFor } from '@testing-library/react';
+// import { waitFor } from '@testing-library/react';
 
 describe('DogPage', () => {
     it('renders loading component for the initial render', () => {
