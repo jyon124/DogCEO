@@ -24,17 +24,8 @@ describe("DogPage", () => {
     
     it("renders loading component if the fetch call is being made", async () => {
         expect.assertions(2);
-        const mockFetchJson = jest.fn();
         jest.spyOn(global, "fetch");
-        const response = {
-            message: ["dog1img.jpeg"],
-            status: "success",
-        };
-        mockFetchJson.mockImplementationOnce(async () => response);
-        fetch.mockImplementationOnce(async () => ({
-            json: mockFetchJson,
-        }));
-        await act (async () => {
+        await act(async () => {
             await api.fetchRandomDogImgs(1);
         });
         const wrapper = mount(<DogPage />);
@@ -42,7 +33,6 @@ describe("DogPage", () => {
         // If fetch function have invoked then render Loading component to be equal
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
         fetch.mockClear();
-        mockFetchJson.mockClear();
     });
 
     it("renders DogCard components when dog images data are available", () => {
