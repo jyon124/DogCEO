@@ -1,8 +1,9 @@
 import React from "react";
 import DogPage from "./dog-page.js";
-import Loading from "../../components/loading/loading.js";
-import { mount } from "enzyme";
 import DogCard from "../../components/dog-card/dog-card.js";
+import Loading from "../../components/loading/loading.js";
+import api from "../../service/api.js";
+import { mount } from "enzyme";
 import { act } from "@testing-library/react";
 
 describe("DogPage", () => {
@@ -22,17 +23,26 @@ describe("DogPage", () => {
     });
     
     it("renders loading component if the fetch call is being made", async () => {
-        // Not exactly. Here you mocked fetch API, not the Dog API service.
         expect.assertions(2);
-        const promise = Promise.resolve();
+        const mockFetchJson = jest.fn();
         jest.spyOn(global, "fetch");
-        fetch.mockImplementationOnce(async () => promise);
+        const response = {
+            message: ["dog1img.jpeg"],
+            status: "success",
+        };
+        mockFetchJson.mockImplementationOnce(async () => response);
+        fetch.mockImplementationOnce(async () => ({
+            json: mockFetchJson,
+        }));
+        await act (async () => {
+            await api.fetchRandomDogImgs(1);
+        });
         const wrapper = mount(<DogPage />);
         expect(fetch).toHaveBeenCalled();
         // If fetch function have invoked then render Loading component to be equal
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
-        await act(() => promise);
         fetch.mockClear();
+        mockFetchJson.mockClear();
     });
 
     it("renders DogCard components when dog images data are available", () => {
