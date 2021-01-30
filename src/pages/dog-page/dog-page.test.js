@@ -1,9 +1,9 @@
 import React from "react";
 import DogPage from "./dog-page.js";
 import Loading from "../../components/loading/loading.js";
-import { shallow, mount } from "enzyme";
+import { mount } from "enzyme";
 import DogCard from "../../components/dog-card/dog-card.js";
-import { waitFor, act } from "@testing-library/react";
+import { act } from "@testing-library/react";
 
 describe("DogPage", () => {
     it("renders loading component for the initial render", () => {
@@ -22,6 +22,7 @@ describe("DogPage", () => {
     });
     
     it("renders loading component if the fetch call is being made", async () => {
+        // Not exactly. Here you mocked fetch API, not the Dog API service.
         expect.assertions(2);
         const promise = Promise.resolve();
         jest.spyOn(global, "fetch");
@@ -44,7 +45,7 @@ describe("DogPage", () => {
         const wrapper = mount(<DogPage />);
         expect(wrapper.containsMatchingElement(<DogCard dog={mockdata[0]} />)).toEqual(true);
     });
-    // it("renders only unique dog image - filters the duplicates");
-    // it("fetches additional dog images when the scroll reaches to the bottom and renders them");
-    // it("tests the debounce allows the additional dog image fetch per certain time period");
+    it.todo("renders only unique dog image - filters the duplicates");
+    it.todo("fetches additional dog images when the scroll reaches to the bottom and renders them");
+    it.todo("tests the debounce allows the additional dog image fetch per certain time period");
 });
