@@ -74,12 +74,12 @@ function DogPage() {
                 return selectedBreeds === breed;
             });
             return filteredDogImgs.map((dog) => {
-                return <DogCard className="dog-card" dog={dog} key={dog + Math.random()} />;
+                return <DogCard dog={dog} key={dog + Math.random()} />;
             });
         } else {
             if (dogImgs.length) {
                 return dogImgs.map((dog) => {
-                    return <DogCard className="dog-card" dog={dog} key={dog + Math.random()} />;
+                    return <DogCard dog={dog} key={dog + Math.random()} />;
                 });
             }
         }
