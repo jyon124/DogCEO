@@ -3,6 +3,7 @@ import DogPage from "./dog-page.js";
 import Loading from "../../components/loading/loading.js";
 import { shallow, mount } from "enzyme";
 import DogCard from "../../components/dog-card/dog-card.js";
+// import { waitFor } from "@testing-library/react";
 
 describe("DogPage", () => {
     it("renders loading component for the initial render", () => {
@@ -12,36 +13,40 @@ describe("DogPage", () => {
     });
 
     it("renders loading component if no dog images are fetched", () => {
-        const mockDog = "dog.jpeg";
-        const mocksetDogImgs = jest.fn();
-        React.useState = jest.fn(() => [[], mocksetDogImgs]);
-        const wrapper = shallow(<DogPage />);
-        // Check if DogCard component has rendered, it only renders when dog images are fetched
-        expect(
-            wrapper.containsMatchingElement(<DogCard dog={mockDog} />)
-        ).toEqual(false);
-        // If dog images aren't fetched, Loading component have to be visible
+        expect.assertions(2);
+        const wrapper = mount(<DogPage />);
+        // Try to find any DogCard component by className in DogPage component
+        const findDogCard = wrapper.find(".dog-card");
+        // If there are no DogCard component then check existence of Loading component 
+        expect(findDogCard.exists()).toBe(false);
+        expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
+    });
+    
+    it("renders loading component if the fetch call is being made", () => {
+        expect.assertions(2);
+        // Check if useEffect has been called
+        const mockUseEffect = () => {
+            useEffect.mockImplementationOnce(() => {});
+        };
+        const useEffect = jest.spyOn(React, "useEffect");
+        const wrapper = mount(<DogPage />);
+        expect(useEffect).toHaveBeenCalled();
+        // If so, fetch function has to be invoked and render Loading component
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
     });
 
-    it("renders loading component if the fetch call is being made", (done) => {
+    it("renders DogCard components when dog images data are available", () => {
         expect.assertions(2);
-        const mockDog = "dog.jpeg";
-        const mockDogImgs = ["dog1.jpeg", "dog2.jpeg", "dog3.jpeg"];
-        const mocksetDogImgs = jest.fn();
-        // If dogImgs length is positive number, it should render DogCard component
-        React.useState = jest.fn(() => [mockDogImgs, mocksetDogImgs]);
-        const wrapper = shallow(<DogPage />);
-        expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
-        wrapper.update();
-        // Check if there is any DogCard component
-        expect(
-            wrapper.containsMatchingElement(<DogCard dog={mockDog} />)
-        ).toEqual(true);
-        done();
+        // Mocked DogImgs to test if DogCard component renders as expected
+        const useState = React.useState;
+        const mockdata = ["dog1.jpeg"];
+        jest.spyOn(React, "useState")
+        .mockImplementationOnce(() => useState(mockdata));
+        const wrapper = mount(<DogPage />);
+        expect(wrapper.containsMatchingElement(<DogCard dog={mockdata[0]} />)).toEqual(true);
+        expect(wrapper.containsMatchingElement(<Loading />)).toEqual(false);
     });
-    // it('renders DogCard components when dog images data are available');
-    // it('renders only unique dog image - filters the duplicates');
-    // it('fetches additional dog images when the scroll reaches to the bottom and renders them');
-    // it('tests the debounce allows the additional dog image fetch per certain time period');
+    // it("renders only unique dog image - filters the duplicates");
+    // it("fetches additional dog images when the scroll reaches to the bottom and renders them");
+    // it("tests the debounce allows the additional dog image fetch per certain time period");
 });
