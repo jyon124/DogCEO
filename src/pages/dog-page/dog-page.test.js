@@ -2,9 +2,7 @@ import React from "react";
 import DogPage from "./dog-page.js";
 import DogCard from "../../components/dog-card/dog-card.js";
 import Loading from "../../components/loading/loading.js";
-import api from "../../service/api.js";
 import { mount } from "enzyme";
-import { act } from "@testing-library/react";
 
 describe("DogPage", () => {
     it("renders loading component for the initial render", () => {
@@ -25,9 +23,6 @@ describe("DogPage", () => {
     it("renders loading component if the fetch call is being made", async () => {
         expect.assertions(2);
         jest.spyOn(global, "fetch");
-        await act(async () => {
-            await api.fetchRandomDogImgs(1);
-        });
         const wrapper = mount(<DogPage />);
         expect(fetch).toHaveBeenCalled();
         // If fetch function have invoked then render Loading component to be equal
@@ -35,7 +30,7 @@ describe("DogPage", () => {
         fetch.mockClear();
     });
 
-    it("renders DogCard components when dog images data are available", () => {
+    it("renders DogCard components when dog images data are available", async () => {
         expect.assertions(1);
         // Mocked DogImgs to test if DogCard component renders as expected
         const useState = React.useState;
