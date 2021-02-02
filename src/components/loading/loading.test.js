@@ -1,12 +1,11 @@
 import React from "react";
 import Loading from "./loading.js";
-import { shallow } from "enzyme";
-import toJson from "enzyme-to-json";
+import { mount } from "enzyme";
 
 describe("Loading", () => {
-    /** Snapshot test to test @Loading component renders correctly **/
     it("renders a Loading component", () => {
-        const wrapper = shallow(<Loading />);
-        expect(toJson(wrapper)).toMatchSnapshot();
+        expect.assertions(1);
+        const wrapper = mount(<Loading />);
+        expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
     });
 });

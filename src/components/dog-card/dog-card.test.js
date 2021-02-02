@@ -1,15 +1,13 @@
 import React from "react";
 import DogCard from "./dog-card.js";
-import { shallow } from "enzyme";
-import toJson from "enzyme-to-json";
+import { mount } from "enzyme";
 
 describe("DogCard", () => {
-    /** Snapshot test to test @DogCard component renders correctly **/
     it("renders a DogCard component", () => {
+        expect.assertions(2);
         const testData = "testImage.jpeg";
-        const wrapper = shallow(
-            <DogCard dog={testData} key={testData + Math.random()} />
-        );
-        expect(toJson(wrapper)).toMatchSnapshot();
+        const wrapper = mount(<DogCard dog={testData} />);
+        expect(wrapper.props().dog).toBe(testData);
+        expect(wrapper.containsMatchingElement(<DogCard dog={testData} />)).toEqual(true);
     });
 });
