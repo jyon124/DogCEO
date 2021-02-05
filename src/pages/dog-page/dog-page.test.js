@@ -4,7 +4,7 @@ import DogCard from "../../components/dog-card/dog-card.js";
 import Loading from "../../components/loading/loading.js";
 import api from "../../service/api.js";
 import { mount } from "enzyme";
-import { act, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 
 describe("DogPage", () => {
     jest.mock("../../service/api", () => {
