@@ -97,7 +97,7 @@ function DogPage() {
             }
         });
         dogs.forEach((dog) => {
-            if (!map.has(dog)) {
+            if (!map.has(dog) && !result.includes(dog)) {
                 result.push(dog);
             }
         });
