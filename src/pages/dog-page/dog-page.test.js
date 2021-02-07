@@ -9,12 +9,7 @@ import { waitFor, fireEvent } from "@testing-library/react";
 describe("DogPage", () => {
     jest.mock("../../service/api", () => {
         return {
-            fetchRandomDogImgs: jest.fn().mockImplementation(() => {
-                return {
-                    message: ["dog1.jpg"],
-                    status: "success"
-                }
-            }),
+            fetchRandomDogImgs: jest.fn(),
         };
     });
 
@@ -39,10 +34,11 @@ describe("DogPage", () => {
     
     it("renders loading component if the fetch call is being made", async() => {
         expect.assertions(2);
-        api.fetchRandomDogImgs = jest.fn(() => ({
+        const resp = {
             message: ["dog1.jpg"],
             status: "success"
-        }));
+        };
+        api.fetchRandomDogImgs = jest.fn(() => Promise.resolve(resp));
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(api.fetchRandomDogImgs).toHaveBeenCalled();
@@ -52,10 +48,11 @@ describe("DogPage", () => {
 
     it("renders DogCard components when dog images data are available", async () => {
         expect.assertions(2);
-        api.fetchRandomDogImgs = jest.fn(() => ({
+        const resp = {
             message: ["dog1.jpg"],
             status: "success"
-        }));
+        };
+        api.fetchRandomDogImgs = jest.fn(() => Promise.resolve(resp));
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(api.fetchRandomDogImgs).toHaveBeenCalled();
@@ -64,10 +61,11 @@ describe("DogPage", () => {
     });
 
     it("renders only unique dog image - filters the duplicates", async () => {
-        api.fetchRandomDogImgs = jest.fn(() => ({
+        const resp = {
             message: ["dog1.jpg", "dog1.jpg", "dog3.jpg", "dog2.jpg", "dog3.jpg", "dog1.jpg"],
             status: "success"
-        }));
+        };
+        api.fetchRandomDogImgs = jest.fn(() => Promise.resolve(resp));
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(wrapper.html().split("src").length-1).toEqual(3);
