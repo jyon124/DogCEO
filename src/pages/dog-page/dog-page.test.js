@@ -8,6 +8,7 @@ import { waitFor, fireEvent } from "@testing-library/react";
 
 describe("DogPage", () => {
     jest.mock("../../service/api");
+    api.fetchRandomDogImgs = jest.fn();
 
     it("renders loading component for the initial render", async () => {
         expect.assertions(1);
@@ -28,13 +29,13 @@ describe("DogPage", () => {
         });
     });
     
-    it("renders loading component if the fetch call is being made", async() => {
+    it("renders loading component if the fetch call is being made", async () => {
         expect.assertions(2);
         const resp = {
             message: ["dog1.jpg"],
             status: "success"
         };
-        api.fetchRandomDogImgs = jest.fn().mockImplementationOnce(() => resp);
+        api.fetchRandomDogImgs.mockImplementationOnce(() => resp)
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             // expect(wrapper.html()).toEqual(1);
@@ -49,7 +50,7 @@ describe("DogPage", () => {
             message: ["dog1.jpg"],
             status: "success"
         };
-        api.fetchRandomDogImgs = jest.fn().mockImplementationOnce(() => resp);
+        api.fetchRandomDogImgs.mockImplementationOnce(() => resp)
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(api.fetchRandomDogImgs).toHaveBeenCalled();
@@ -62,15 +63,15 @@ describe("DogPage", () => {
             message: ["dog1.jpg", "dog1.jpg", "dog3.jpg", "dog2.jpg", "dog3.jpg", "dog1.jpg"],
             status: "success"
         };
-        api.fetchRandomDogImgs = jest.fn().mockImplementationOnce(() => resp);
+        api.fetchRandomDogImgs.mockImplementationOnce(() => resp)
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(wrapper.html().split("src").length-1).toEqual(3);
         });
     });
 
-    it.skip("fetches additional dog images when the scroll reaches to the bottom and renders them" , async() => {
-        api.fetchRandomDogImgs = jest.fn(() => ({
+    it.skip("fetches additional dog images when the scroll reaches to the bottom and renders them" , async () => {
+        const resp = {
             message: [
                 "dog1.jpg", "dog2.jpg", "dog3.jpg", "dog4.jpg", "dog5.jpg", 
                 "dog6.jpg","dog7.jpg","dog8.jpg","dog9.jpg","dog10.jpg",
@@ -78,7 +79,8 @@ describe("DogPage", () => {
                 "dog16.jpg","dog17.jpg","dog18.jpg","dog19.jpg","dog20.jpg"
             ],
             status: "success"
-        }));
+        };
+        api.fetchRandomDogImgs.mockImplementationOnce(resp)
         const wrapper = mount(<DogPage />);
         fireEvent.scroll(global, { target: { scrollY: 2000 } });
         await waitFor(() => {
