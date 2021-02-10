@@ -7,11 +7,7 @@ import { mount } from "enzyme";
 import { waitFor, fireEvent } from "@testing-library/react";
 
 describe("DogPage", () => {
-    jest.mock("../../service/api", () => {
-        return {
-            fetchRandomDogImgs: jest.fn(),
-        };
-    });
+    jest.mock("../../service/api");
 
     it("renders loading component for the initial render", async () => {
         expect.assertions(1);
@@ -38,9 +34,10 @@ describe("DogPage", () => {
             message: ["dog1.jpg"],
             status: "success"
         };
-        api.fetchRandomDogImgs = jest.fn(() => Promise.resolve(resp));
+        api.fetchRandomDogImgs = jest.fn().mockImplementationOnce(() => resp);
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
+            // expect(wrapper.html()).toEqual(1);
             expect(api.fetchRandomDogImgs).toHaveBeenCalled();
             expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
         });
@@ -52,7 +49,7 @@ describe("DogPage", () => {
             message: ["dog1.jpg"],
             status: "success"
         };
-        api.fetchRandomDogImgs = jest.fn(() => Promise.resolve(resp));
+        api.fetchRandomDogImgs = jest.fn().mockImplementationOnce(() => resp);
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(api.fetchRandomDogImgs).toHaveBeenCalled();
@@ -65,7 +62,7 @@ describe("DogPage", () => {
             message: ["dog1.jpg", "dog1.jpg", "dog3.jpg", "dog2.jpg", "dog3.jpg", "dog1.jpg"],
             status: "success"
         };
-        api.fetchRandomDogImgs = jest.fn(() => Promise.resolve(resp));
+        api.fetchRandomDogImgs = jest.fn().mockImplementationOnce(() => resp);
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(wrapper.html().split("src").length-1).toEqual(3);
