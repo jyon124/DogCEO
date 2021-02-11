@@ -4,14 +4,31 @@ import DogCard from "../../components/dog-card/dog-card.js";
 import Loading from "../../components/loading/loading.js";
 import api from "../../service/api.js";
 import { mount } from "enzyme";
-import { waitFor, fireEvent } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
+
+jest.mock("../../service/api");
+const dogImgResp = {
+    message: ["dog1.jpg", "dog1.jpg", "dog3.jpg", "dog2.jpg", "dog3.jpg", "dog1.jpg"],
+    status: "success"
+};
+const dogBreedsResp = {
+    message: { affenpinscher: [], cattledog: ["australian"] },
+    status: "success",
+};
+api.fetchRandomDogImgs = jest.fn();
+api.fetchDogBreeds = jest.fn();
 
 describe("DogPage", () => {
-    jest.mock("../../service/api");
-    api.fetchRandomDogImgs = jest.fn();
+    beforeEach(() => {
+        api.fetchRandomDogImgs.mockImplementationOnce(() => dogImgResp);
+        api.fetchDogBreeds.mockImplementationOnce(() => dogBreedsResp);
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 
     it("renders loading component for the initial render", async () => {
-        expect.assertions(1);
         // On mount, DogPage invoke fetch requests in useEffect that spin up loading
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
@@ -31,11 +48,6 @@ describe("DogPage", () => {
     
     it("renders loading component if the fetch call is being made", async () => {
         expect.assertions(2);
-        const resp = {
-            message: ["dog1.jpg"],
-            status: "success"
-        };
-        api.fetchRandomDogImgs.mockImplementationOnce(() => resp)
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             // expect(wrapper.html()).toEqual(1);
@@ -46,11 +58,6 @@ describe("DogPage", () => {
 
     it("renders DogCard components when dog images data are available", async () => {
         expect.assertions(2);
-        const resp = {
-            message: ["dog1.jpg"],
-            status: "success"
-        };
-        api.fetchRandomDogImgs.mockImplementationOnce(() => resp)
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(api.fetchRandomDogImgs).toHaveBeenCalled();
@@ -59,35 +66,12 @@ describe("DogPage", () => {
     });
 
     it("renders only unique dog image - filters the duplicates", async () => {
-        const resp = {
-            message: ["dog1.jpg", "dog1.jpg", "dog3.jpg", "dog2.jpg", "dog3.jpg", "dog1.jpg"],
-            status: "success"
-        };
-        api.fetchRandomDogImgs.mockImplementationOnce(() => resp)
         const wrapper = mount(<DogPage />);
         await waitFor(() => {
             expect(wrapper.html().split("src").length-1).toEqual(3);
         });
     });
 
-    it.skip("fetches additional dog images when the scroll reaches to the bottom and renders them" , async () => {
-        const resp = {
-            message: [
-                "dog1.jpg", "dog2.jpg", "dog3.jpg", "dog4.jpg", "dog5.jpg", 
-                "dog6.jpg","dog7.jpg","dog8.jpg","dog9.jpg","dog10.jpg",
-                "dog11.jpg","dog12.jpg","dog13.jpg","dog14.jpg","dog15.jpg",
-                "dog16.jpg","dog17.jpg","dog18.jpg","dog19.jpg","dog20.jpg"
-            ],
-            status: "success"
-        };
-        api.fetchRandomDogImgs.mockImplementationOnce(resp)
-        const wrapper = mount(<DogPage />);
-        fireEvent.scroll(global, { target: { scrollY: 2000 } });
-        await waitFor(() => {
-            // console.log(window.scrollY)
-            expect(api.fetchRandomDogImgs).toHaveBeenCalledWith(1);
-            // expect(wrapper.html()).toEqual(true);
-        })
-    });
+    it.todo("fetches additional dog images when the scroll reaches to the bottom and renders them");
     it.todo("tests the debounce allows the additional dog image fetch per certain time period");
 });
