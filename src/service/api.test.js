@@ -1,4 +1,5 @@
 import api from "./api.js";
+import { waitFor } from "@testing-library/react";
 
 describe("DogApi.fetchRandomDogImgs", () => {
     const mockFetchJson = jest.fn();
@@ -7,6 +8,7 @@ describe("DogApi.fetchRandomDogImgs", () => {
         fetch.mockClear();
         mockFetchJson.mockClear();
     });
+
     it("calls the fetch API and return the JSON data", async () => {
         expect.assertions(3);
         const response = {
@@ -18,11 +20,21 @@ describe("DogApi.fetchRandomDogImgs", () => {
             json: mockFetchJson,
         }));
         const data = await api.fetchRandomDogImgs(1);
-        expect(fetch).toHaveBeenCalled();
-        expect(mockFetchJson).toHaveBeenCalled();
-        expect(data).toEqual(response);
+        await waitFor(() => {
+            expect(fetch).toHaveBeenCalled();
+            expect(mockFetchJson).toHaveBeenCalled();
+            expect(data).toEqual(response);
+        });
     });
-    it.todo("throws an error in case the network call fails");
+
+    it("throws an error in case the network call fails", async () => {
+        expect.assertions(1);
+        const error = new Error("Network request failed");
+        fetch.mockImplementation(() => Promise.reject(error));
+        await waitFor(() => {
+            expect(api.fetchRandomDogImgs(1)).rejects.toEqual(error);
+        });
+    });
 });
 
 describe("DogApi.fetchDogBreeds", () => {
@@ -32,6 +44,7 @@ describe("DogApi.fetchDogBreeds", () => {
         fetch.mockClear();
         mockFetchJson.mockClear();
     });
+
     it("calls the fetch API and return the JSON data", async () => {
         expect.assertions(3);
         const response = {
@@ -43,9 +56,19 @@ describe("DogApi.fetchDogBreeds", () => {
             json: mockFetchJson,
         }));
         const data = await api.fetchDogBreeds();
-        expect(fetch).toHaveBeenCalled();
-        expect(mockFetchJson).toHaveBeenCalled();
-        expect(data).toEqual(response);
+        await waitFor(() => {
+            expect(fetch).toHaveBeenCalled();
+            expect(mockFetchJson).toHaveBeenCalled();
+            expect(data).toEqual(response);
+        });
     });
-    it.todo("throws an error in case the network call fails");
+
+    it("throws an error in case the network call fails" , async () => {
+        expect.assertions(1);
+        const error = new Error("Network request failed");
+        fetch.mockImplementation(() => Promise.reject(error));
+        await waitFor(() => {
+            expect(api.fetchDogBreeds()).rejects.toEqual(error);
+        });
+    });
 });
