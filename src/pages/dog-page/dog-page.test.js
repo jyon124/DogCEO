@@ -6,7 +6,7 @@ import api from "../../service/api.js";
 import { mount } from "enzyme";
 import { waitFor } from "@testing-library/react";
 
-jest.mock("../../service/api");
+jest.mock("../../service/api.js");
 const dogImgResp = {
     message: ["dog1.jpg", "dog1.jpg", "dog3.jpg", "dog2.jpg", "dog3.jpg", "dog1.jpg"],
     status: "success"
@@ -15,8 +15,6 @@ const dogBreedsResp = {
     message: { affenpinscher: [], cattledog: ["australian"] },
     status: "success",
 };
-api.fetchRandomDogImgs = jest.fn();
-api.fetchDogBreeds = jest.fn();
 
 describe("DogPage", () => {
     beforeEach(() => {
