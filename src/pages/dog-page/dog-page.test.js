@@ -24,7 +24,7 @@ describe("DogPage", () => {
         expect(wrapper.containsMatchingElement(<Loading />)).toEqual(true);
     });
 
-    it("renders loading component if the fetch call is being made", (done) => {
+    it.skip("renders loading component if the fetch call is being made", (done) => {
         expect.assertions(2);
         const mockDog = "dog.jpeg";
         const mockDogImgs = ["dog1.jpeg", "dog2.jpeg", "dog3.jpeg"];
